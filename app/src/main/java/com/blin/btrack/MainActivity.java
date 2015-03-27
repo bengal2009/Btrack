@@ -105,7 +105,9 @@ public class MainActivity extends Activity implements SendMsgAsyncTask.OnSendScu
 		SetTagTask task = new SetTagTask("TAG_GROUP", userId);
 		task.setTags();
 	}
+    public void ListTag(View v) {
 
+    }
 	@Override
 	public void sendScuess(String msg) {
 		Calendar calendar= Calendar.getInstance();

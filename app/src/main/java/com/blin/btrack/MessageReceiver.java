@@ -207,8 +207,12 @@ public class MessageReceiver extends FrontiaPushMessageReceiver {
     }
 
     @Override
-    public void onListTags(Context arg0, int arg1, List<String> arg2, String arg3) {
+    public void onListTags(Context arg0, int errorCode, List<String> tags, String requestId) {
+        String responseString = "onListTags errorCode=" + errorCode + " tags="
+                + tags;
+        Log.i("ListTAG", responseString);
 
+        // Demo更新界面展示代?，?用?在?里加入自己的?理??
     }
 
     @Override

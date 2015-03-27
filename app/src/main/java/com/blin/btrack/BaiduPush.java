@@ -1,4 +1,4 @@
-package com.blin.btrack;;
+package com.blin.btrack;import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -11,7 +11,7 @@ import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.util.Map;
 
-import android.util.Log;
+;
 
 
 public class BaiduPush {
@@ -71,14 +71,15 @@ public class BaiduPush {
 		return rc;
 	}
 
-	/**
-	 * ?行Post?求前?据?理，加密之?
-	 * 
-	 * @param data
-	 *            ?求的?据
-	 * @return
-	 */
-	public String PostHttpRequest(RestApi data) {
+    /**
+     * 执行Post请求前数据处理，加密之类
+     *
+     * @param data
+     *            请求的数据
+     * @return
+     */
+
+    public String PostHttpRequest(RestApi data) {
 
 		StringBuilder sb = new StringBuilder();
 
@@ -208,18 +209,19 @@ public class BaiduPush {
 		return 0;
 	}
 
-	//
-	// REST APIs
-	//
-	/**
-	 * 查???信息、?用、用?与百度Channel的?定?系。
-	 * 
-	 * @param userid
-	 *            用?id
-	 * @param channelid
-	 * @return json形式的服?器恢复
-	 */
-	public String QueryBindlist(String userid, String channelid) {
+    //
+    // REST APIs
+    //
+    /**
+     * 查询设备信息、应用、用户与百度Channel的绑定关系。
+     *
+     * @param userid
+     *            用户id
+     * @param channelid
+     * @return json形式的服务器恢复
+     */
+
+    public String QueryBindlist(String userid, String channelid) {
 		RestApi ra = new RestApi(RestApi.METHOD_QUERY_BIND_LIST);
 		ra.put(RestApi._USER_ID, userid);
 		// ra.put(RestApi._DEVICE_TYPE, RestApi.DEVICE_TYPE_ANDROID);
@@ -245,26 +247,28 @@ public class BaiduPush {
 		return PostHttpRequest(ra);
 	}
 
-	/**
-	 * ?指定用??置??
-	 * 
-	 * @param tag
-	 * @param userid
-	 * @return
-	 */
-	public String SetTag(String tag, String userid) {
+    /**
+     * 给指定用户设置标签
+     *
+     * @param tag
+     * @param userid
+     * @return
+     */
+
+    public String SetTag(String tag, String userid) {
 		RestApi ra = new RestApi(RestApi.METHOD_SET_TAG);
 		ra.put(RestApi._USER_ID, userid);
 		ra.put(RestApi._TAG, tag);
 		return PostHttpRequest(ra);
 	}
 
-	/**
-	 * 查??用的所有??
-	 * 
-	 * @return
-	 */
-	public String FetchTag() {
+    /**
+     * 查询应用的所有标签
+     *
+     * @return
+     */
+
+    public String FetchTag() {
 		RestApi ra = new RestApi(RestApi.METHOD_FETCH_TAG);
 		// ra.put(RestApi._NAME, "0");
 		// ra.put(RestApi._START, "0");
@@ -272,14 +276,15 @@ public class BaiduPush {
 		return PostHttpRequest(ra);
 	}
 
-	/**
-	 * ?除指定用?的指定??
-	 * 
-	 * @param tag
-	 * @param userid
-	 * @return
-	 */
-	public String DeleteTag(String tag, String userid) {
+    /**
+     * 删除指定用户的指定标签
+     *
+     * @param tag
+     * @param userid
+     * @return
+     */
+
+    public String DeleteTag(String tag, String userid) {
 		RestApi ra = new RestApi(RestApi.METHOD_DELETE_TAG);
 		ra.put(RestApi._USER_ID, userid);
 		ra.put(RestApi._TAG, tag);

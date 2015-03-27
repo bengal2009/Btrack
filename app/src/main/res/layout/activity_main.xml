@@ -61,4 +61,14 @@
         android:layout_alignParentStart="true"
         android:textSize="@dimen/shmsg_textsize" />
 
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="ListTag"
+        android:text="查询tag"
+        android:layout_alignTop="@+id/button1"
+        android:layout_toLeftOf="@+id/button1"
+        android:layout_toStartOf="@+id/button1" />
+
 </RelativeLayout>
