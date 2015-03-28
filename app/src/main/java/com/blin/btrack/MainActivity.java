@@ -25,7 +25,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class MainActivity extends Activity implements SendMsgAsyncTask.OnSendScuessListener{
+public class MainActivity extends Activity implements SendMsgAsyncTask.OnSendScuessListener,SendTagMsgAsyncTask.OnSendTagScuessListener{
 
 	PushApplication app;
 	Gson mGson;
@@ -118,7 +118,46 @@ public class MainActivity extends Activity implements SendMsgAsyncTask.OnSendScu
 		InputMethodManager inputmanger = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         inputmanger.hideSoftInputFromWindow(etMessage.getWindowToken(), 0);
 	}
+    //SendTag
+    public void SendTag(View v) {
+        String userId = app.getUserId();
+        String channelId = app.getChannelId();
+        EditText etMessage = ((EditText)findViewById(R.id.etMsg));
+        curMsg = etMessage.getText().toString();
+        Message message = new Message(userId, channelId, System.currentTimeMillis(), curMsg, "");
+        LinearLayout layout = new LinearLayout(this);
+        layout.setOrientation(LinearLayout.VERTICAL);
 
+        final EditText textviewGid = new EditText(this);
+        textviewGid.setHint("以英文逗号隔开：");
+        layout.addView(textviewGid);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(
+                this);
+        builder.setView(layout);
+        builder.setPositiveButton("照TAG发送",
+                new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Push: ?置tag?用方式
+                      /*  List<String> tags = Utils.getTagsList(textviewGid
+                                .getText().toString());
+                        PushManager.setTags(getApplicationContext(), tags);*/
+                        String userId = app.getUserId();
+                        SetTagTask task = new SetTagTask(textviewGid.getText().toString(), userId);
+                        task.setTags();
+                    }
+
+                });
+        builder.show();
+
+        SendTagMsgAsyncTask task = new SendTagMsgAsyncTask(mGson.toJson(message), userId);
+        task.setOnSendTagScuessListener(this);
+        task.send();
+        etMessage.setText("");
+        InputMethodManager inputmanger = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputmanger.hideSoftInputFromWindow(etMessage.getWindowToken(), 0);
+    }
 	//Original Settag
 	/*public void setTag(View v) {
 		String userId = app.getUserId();
