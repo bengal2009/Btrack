@@ -14,12 +14,15 @@ import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.baidu.android.pushservice.PushManager;
 import com.google.gson.Gson;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 public class MainActivity extends Activity implements SendMsgAsyncTask.OnSendScuessListener{
@@ -44,6 +47,7 @@ public class MainActivity extends Activity implements SendMsgAsyncTask.OnSendScu
                             Toast.LENGTH_LONG).show();
                 }
 				((TextView)findViewById(R.id.textView1)).append(bindString);
+
 			}else if (intent.hasExtra("onMessage")) {
 				String msgLine = "";
 				try {
@@ -64,8 +68,23 @@ public class MainActivity extends Activity implements SendMsgAsyncTask.OnSendScu
 			}else if (intent.hasExtra("onSetTags")) {
 				String info = intent.getStringExtra("onSetTags");
 				Log.i("onReceive", info);
-				((TextView)findViewById(R.id.textView1)).append(info);
-			}
+				((TextView)findViewById(R.id.textView2)).append(info);
+			}else if (intent.hasExtra("onListTags")) {
+               /* String info = intent.getStringExtra("onListTags");
+                ((TextView)findViewById(R.id.textView2)).append(info);*/
+                Bundle bindData = intent.getBundleExtra("onListTags");
+                ArrayList<String>tagstr=bindData.getStringArrayList("tags");
+                app.setListTags(tagstr);
+                for(String s1:tagstr)
+                {
+                    ((TextView)findViewById(R.id.textView2)).append(s1+"\n");
+                }
+
+
+            }else if (intent.hasExtra("onDelTags")) {
+                String info = intent.getStringExtra("onDelTags");
+                ((TextView)findViewById(R.id.textView2)).append(info);
+            }
 		}
 		
 	};
@@ -99,14 +118,46 @@ public class MainActivity extends Activity implements SendMsgAsyncTask.OnSendScu
 		InputMethodManager inputmanger = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         inputmanger.hideSoftInputFromWindow(etMessage.getWindowToken(), 0);
 	}
-	
-	public void setTag(View v) {
+
+	//Original Settag
+	/*public void setTag(View v) {
 		String userId = app.getUserId();
 		SetTagTask task = new SetTagTask("TAG_GROUP", userId);
 		task.setTags();
-	}
-    public void ListTag(View v) {
+	}*/
+    public void setTag(View v) {
+        LinearLayout layout = new LinearLayout(this);
+        layout.setOrientation(LinearLayout.VERTICAL);
 
+        final EditText textviewGid = new EditText(this);
+        textviewGid.setHint("以英文逗号隔开：");
+        layout.addView(textviewGid);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(
+                this);
+        builder.setView(layout);
+        builder.setPositiveButton("设置TAG",
+                new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Push: ?置tag?用方式
+                      /*  List<String> tags = Utils.getTagsList(textviewGid
+                                .getText().toString());
+                        PushManager.setTags(getApplicationContext(), tags);*/
+                        String userId = app.getUserId();
+                        SetTagTask task = new SetTagTask(textviewGid.getText().toString(), userId);
+                        task.setTags();
+                    }
+
+                });
+        builder.show();
+    }
+    public void ListTag(View v) {
+       PushManager.listTags(this);
+    }
+    public void DelTag(View v) {
+        PushManager.listTags(this);
+        PushManager.delTags(this, app.getListTags());
     }
 	@Override
 	public void sendScuess(String msg) {

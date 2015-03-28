@@ -202,17 +202,40 @@ public class MessageReceiver extends FrontiaPushMessageReceiver {
 
 
     @Override
-    public void onDelTags(Context arg0, int arg1, List<String> arg2, List<String> arg3, String arg4) {
-
+    public void onDelTags(Context context, int errorCode,
+                          List<String> sucessTags, List<String> failTags, String requestId) {
+        String responseString = "onDelTags errorCode=" + errorCode
+                + " sucessTags=" + sucessTags + " failTags=" + failTags
+                + " requestId=" + requestId;
+        Log.i("ListTAG", responseString);
     }
 
     @Override
     public void onListTags(Context arg0, int errorCode, List<String> tags, String requestId) {
         String responseString = "onListTags errorCode=" + errorCode + " tags="
                 + tags;
-        Log.i("ListTAG", responseString);
-
+        /*Log.i("ListTAG", responseString);
+        Toast.makeText(arg0, responseString,
+                Toast.LENGTH_SHORT).show();
+        for(String s1:tags) {
+            deliverSimpleMessage(arg0, "onListTags", s1+"\n");
+        }*/
         // Demo更新界面展示代?，?用?在?里加入自己的?理??
+        Intent intent = new Intent(ACTION_COMMUNICATION);
+        ArrayList<String> tagarraylist=new ArrayList<String>(tags);
+        Bundle bindData = new Bundle();
+        bindData.putStringArrayList("tags",tagarraylist);
+        intent.putExtra("onListTags", bindData);
+        LocalBroadcastManager.getInstance(arg0).sendBroadcast(intent);
+
+        /*ArrayList<String> s1=tags.toArray()
+
+        Intent intent = new Intent(ACTION_COMMUNICATION);
+        Bundle bindData = new Bundle();
+        bindData.putStringArrayList("tags",);
+        bindData.putString("userId", requestId);
+        intent.putExtra("onListTags", bindData);
+        LocalBroadcastManager.getInstance(arg0).sendBroadcast(intent);*/
     }
 
     @Override

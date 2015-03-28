@@ -4,6 +4,8 @@ import com.baidu.frontia.FrontiaApplication;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.util.List;
+
 public class PushApplication extends FrontiaApplication{
 
 	private static PushApplication mApplication;
@@ -12,7 +14,7 @@ public class PushApplication extends FrontiaApplication{
 	
 	private String userId;
 	private String channelId;
-	
+	private List<String> ListTags;
 	public synchronized BaiduPush getBaiduPush() {
 		if (mBaiduPushServer == null)
 			mBaiduPushServer = new BaiduPush(BaiduPush.HTTP_METHOD_POST,
@@ -54,6 +56,12 @@ public class PushApplication extends FrontiaApplication{
 	public void setChannelId(String channelId) {
 		this.channelId = channelId;
 	}
-	
-	
+    public void  setListTags(List<String> s1)
+    {
+        this.ListTags=s1;
+    }
+
+    public List<String> getListTags() {
+        return ListTags;
+    }
 }
