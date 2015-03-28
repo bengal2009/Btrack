@@ -24,4 +24,6 @@ dependencies {
     compile 'com.android.support:support-v4:21.0.3'
     compile files('libs/gson-2.2.4.jar')
     compile files('libs/pushservice-4.4.0.71.jar')
+    compile files('libs/baidumapapi_v3_3_0.jar')
+    compile files('libs/locSDK_5.0.jar')
 }

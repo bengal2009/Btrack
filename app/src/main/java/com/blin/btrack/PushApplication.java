@@ -1,11 +1,11 @@
 package com.blin.btrack;
 
 import com.baidu.frontia.FrontiaApplication;
+import com.baidu.mapapi.SDKInitializer;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.util.List;
-
 public class PushApplication extends FrontiaApplication{
 
 	private static PushApplication mApplication;
@@ -39,6 +39,7 @@ public class PushApplication extends FrontiaApplication{
 	public void onCreate() {
 		super.onCreate();
 		mApplication = this;
+        SDKInitializer.initialize(this);
 	}
 
 	public String getUserId() {
