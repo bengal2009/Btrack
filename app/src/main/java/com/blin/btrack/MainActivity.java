@@ -146,13 +146,13 @@ public class MainActivity extends Activity implements SendMsgAsyncTask.OnSendScu
                 new DialogInterface.OnClickListener() {
 
                     public void onClick(DialogInterface dialog, int which) {
-                        SendTagMsgAsyncTask task = new SendTagMsgAsyncTask(mGson.toJson(message), userId, textviewGid.getText().toString());
+
 //                        task.setOnSendTagScuessListener(this);
                        /* String userId = app.getUserId();
                         SetTagTask task = new SetTagTask(textviewGid.getText().toString(), userId);
                         task.setTags();*/
 
-                        task.send();
+                        SendTageCall(userId,message,textviewGid.getText().toString());
                         etMessage.setText("");
                         InputMethodManager inputmanger = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                         inputmanger.hideSoftInputFromWindow(etMessage.getWindowToken(), 0);
@@ -163,7 +163,13 @@ public class MainActivity extends Activity implements SendMsgAsyncTask.OnSendScu
         //Alert Over
 
     }
-
+    public void SendTageCall(String userId,Message message,String Tagname)
+    {
+        Log.i("SendTag", "Sendtag Call");
+        SendTagMsgAsyncTask task = new SendTagMsgAsyncTask(mGson.toJson(message), userId, Tagname);
+        task.setOnSendTagScuessListener(this);
+        task.send();
+    }
     //Original Settag
     /*public void setTag(View v) {
 		String userId = app.getUserId();
