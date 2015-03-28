@@ -8,6 +8,7 @@ import android.util.Log;
 public class SendTagMsgAsyncTask {
 	private BaiduPush mBaiduPush;
 	private String mMessage;
+    private String mTagStr;
 	private Handler mHandler;
 	private MyAsyncTask mTask;
 	private OnSendTagScuessListener mListener;
@@ -30,11 +31,12 @@ public class SendTagMsgAsyncTask {
 		}
 	};
 
-	public SendTagMsgAsyncTask(String jsonMsg,String useId) {
+	public SendTagMsgAsyncTask(String jsonMsg,String useId,String TagStr) {
 		// TODO Auto-generated constructor stub
 		mBaiduPush = PushApplication.getInstance().getBaiduPush();
 		mMessage = jsonMsg;
 		mHandler = new Handler();
+        mTagStr=TagStr;
 	}
 
 	// ?送
