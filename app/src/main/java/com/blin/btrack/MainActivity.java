@@ -78,6 +78,7 @@ public class MainActivity extends Activity implements SendMsgAsyncTask.OnSendScu
                 app.setListTags(tagstr);
                 for (String s1 : tagstr) {
                     ((TextView) findViewById(R.id.textView2)).append(s1 + "\n");
+
                 }
 
 

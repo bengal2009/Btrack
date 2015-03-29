@@ -1,13 +1,7 @@
 package com.blin.btrack.GPS;
 
-import android.os.Bundle;
-import android.os.Vibrator;
-import android.support.v7.app.ActionBarActivity;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.EditText;
-import android.widget.RadioGroup;
-import android.widget.TextView;
+import android.app.Activity;
+import android.content.Context;
 import android.widget.Toast;
 
 import com.baidu.location.BDLocation;
@@ -22,32 +16,27 @@ import com.baidu.mapapi.search.geocode.GeoCoder;
 import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeOption;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
-import com.blin.btrack.R;
-public class BaiduLoc extends ActionBarActivity implements OnGetGeoCoderResultListener {
-    private TextView LocationResult,ModeInfor;
-    private Button startLocation;
-    private RadioGroup selectMode,selectCoordinates;
-    private EditText frequence;
-    private LocationClientOption.LocationMode tempMode = LocationClientOption.LocationMode.Hight_Accuracy;
-    private String tempcoor="bd09ll";
-    private CheckBox checkGeoLocation;
+
+/**
+ * Created by Lin on 2015/3/29.
+ */
+public class CurLoc extends Activity implements OnGetGeoCoderResultListener {
     private LatLng CurPOI;
     private GeoCoder mSearch;
     public LocationClient mLocationClient;
     public GeofenceClient mGeofenceClient;
     public MyLocationListener mMyLocationListener;
+    private String  LocationResult;
+    private Context mcontext;
+    private LocationClientOption.LocationMode tempMode = LocationClientOption.LocationMode.Hight_Accuracy;
 
+    public CurLoc(Context mcontext) {
+        this.mcontext=mcontext;
+    }
 
-    public TextView mLocationResult,logMsg;
-    public TextView trigger,exit;
-    public Vibrator mVibrator;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_baidu_loc);
-        LocationResult = (TextView)findViewById(R.id.textView1);
+    public String InitLoc()
+    {
+        String s1=null;
         mLocationClient = new LocationClient(this.getApplicationContext());
         mMyLocationListener = new MyLocationListener();
 //        mLocationClient.registerLocationListener(mMyLocationListener);
@@ -64,7 +53,9 @@ public class BaiduLoc extends ActionBarActivity implements OnGetGeoCoderResultLi
         mLocationClient.registerLocationListener(mMyLocationListener);
         mSearch = GeoCoder.newInstance();
         mSearch.setOnGetGeoCodeResultListener(this);
+        return s1;
     }
+
     @Override
     protected void onStop() {
         // TODO Auto-generated method stub
@@ -72,21 +63,6 @@ public class BaiduLoc extends ActionBarActivity implements OnGetGeoCoderResultLi
         mLocationClient=null;
         mMyLocationListener=null;
         super.onStop();
-    }
-
-    private void InitLocation(){
-        LocationClientOption option = new LocationClientOption();
-        option.setLocationMode(tempMode);//扢离隅弇耀宒
-        option.setCoorType(tempcoor);//殿隙腔隅弇賦彆岆啃僅冪帠僅ㄛ蘇硉gcj02
-        int span=1000;
-        try {
-            span = Integer.valueOf(frequence.getText().toString());
-        } catch (Exception e) {
-            // TODO: handle exception
-        }
-        option.setScanSpan(span);//扢离楷隅弇腔潔路奀潔峈5000ms
-        option.setIsNeedAddress(checkGeoLocation.isChecked());
-        mLocationClient.setLocOption(option);
     }
 
 
