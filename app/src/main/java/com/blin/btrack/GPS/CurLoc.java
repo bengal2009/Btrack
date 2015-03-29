@@ -19,6 +19,7 @@ import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 
 /**
  * Created by Lin on 2015/3/29.
+ * return Location Value
  */
 public class CurLoc extends Activity implements OnGetGeoCoderResultListener {
     private LatLng CurPOI;
@@ -26,7 +27,9 @@ public class CurLoc extends Activity implements OnGetGeoCoderResultListener {
     public LocationClient mLocationClient;
     public GeofenceClient mGeofenceClient;
     public MyLocationListener mMyLocationListener;
-    private String  LocationResult;
+    public String  mLocationResult;
+    public String LocationResult;
+    public LocationInfo Curloc;
     private Context mcontext;
     private LocationClientOption.LocationMode tempMode = LocationClientOption.LocationMode.Hight_Accuracy;
 
@@ -34,12 +37,10 @@ public class CurLoc extends Activity implements OnGetGeoCoderResultListener {
         this.mcontext=mcontext;
     }
 
-    public String InitLoc()
+    public void InitLoc()
     {
-        String s1=null;
         mLocationClient = new LocationClient(this.getApplicationContext());
         mMyLocationListener = new MyLocationListener();
-//        mLocationClient.registerLocationListener(mMyLocationListener);
         mGeofenceClient = new GeofenceClient(getApplicationContext());
         LocationClientOption option = new LocationClientOption();
         option.setLocationMode(tempMode);
@@ -53,7 +54,6 @@ public class CurLoc extends Activity implements OnGetGeoCoderResultListener {
         mLocationClient.registerLocationListener(mMyLocationListener);
         mSearch = GeoCoder.newInstance();
         mSearch.setOnGetGeoCodeResultListener(this);
-        return s1;
     }
 
     @Override
@@ -101,11 +101,10 @@ public class CurLoc extends Activity implements OnGetGeoCoderResultListener {
                 sb.append("\noperationers : ");
                 sb.append(location.getOperators());
             }
-            logMsg(sb.toString());
             CurPOI=new LatLng(location.getLatitude(),location.getLongitude()) ;
             mSearch.reverseGeoCode(new ReverseGeoCodeOption()
                     .location( CurPOI));
-            LocationResult.setText(sb.toString());
+            LocationResult=sb.toString();
             mLocationClient.stop();
 //            Log.i("BaiduLocationApiDem", sb.toString());
         }
@@ -118,10 +117,10 @@ public class CurLoc extends Activity implements OnGetGeoCoderResultListener {
      * 珆尨趼睫揹
      * @param str
      */
-    public void logMsg(String str) {
+   public void logMsg(String str) {
         try {
             if (mLocationResult != null)
-                mLocationResult.setText(str);
+                mLocationResult=str;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -146,7 +145,7 @@ public class CurLoc extends Activity implements OnGetGeoCoderResultListener {
                     .show();
             return;
         }
-        LocationResult.append("\n"+result.getAddress());
+        LocationResult+="\n"+result.getAddress();
         Toast.makeText(this, result.getAddress(),
                 Toast.LENGTH_LONG).show();
 
