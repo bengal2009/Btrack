@@ -29,7 +29,7 @@ public class CurLoc extends Activity implements OnGetGeoCoderResultListener {
     public MyLocationListener mMyLocationListener;
     public String  mLocationResult;
     public String LocationResult;
-    public LocationInfo Curloc;
+    public LocationInfo CurlocationInfo;
     private Context mcontext;
     private LocationClientOption.LocationMode tempMode = LocationClientOption.LocationMode.Hight_Accuracy;
     public LocationInfo Curlocation;
@@ -82,7 +82,7 @@ public class CurLoc extends Activity implements OnGetGeoCoderResultListener {
     public LocationInfo ReturnLocInfo()
     {
         if(GetLocaFlag==false) return null;
-        return Curloc;
+        return CurlocationInfo;
 
     }
     @Override
@@ -104,14 +104,12 @@ public class CurLoc extends Activity implements OnGetGeoCoderResultListener {
         public void onReceiveLocation(BDLocation location) {
             //Receive Location
             StringBuffer sb = new StringBuffer(256);
-            Curloc.setLocationTime(location.getTime());
-            sb.append("\nerror code : ");
-            sb.append(location.getLocType());
-            Curloc.setLatitude(location.getLatitude());
-            Curloc.setLongitude(location.getLongitude());
-            Curloc.setLocationType(location.getLocType());
-            Curloc.setRadius(location.getRadius());
-            Curloc.setErrorCode(location.getLocType());
+            CurlocationInfo.setLocationTime(location.getTime());
+            CurlocationInfo.setLatitude(location.getLatitude());
+            CurlocationInfo.setLongitude(location.getLongitude());
+            CurlocationInfo.setLocationType(location.getLocType());
+            CurlocationInfo.setRadius(location.getRadius());
+            CurlocationInfo.setErrorCode(location.getLocType());
             Toast.makeText(getApplicationContext(),  "Latitude:"+Double.toString(location.getLatitude()),
                     Toast.LENGTH_SHORT).show();
            /* CurPOI=new LatLng(location.getLatitude(),location.getLongitude()) ;

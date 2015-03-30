@@ -19,18 +19,40 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.baidu.android.pushservice.PushManager;
+import com.baidu.location.BDLocation;
+import com.baidu.location.BDLocationListener;
+import com.baidu.location.GeofenceClient;
+import com.baidu.location.LocationClient;
+import com.baidu.location.LocationClientOption;
+import com.baidu.mapapi.model.LatLng;
+import com.baidu.mapapi.search.core.SearchResult;
+import com.baidu.mapapi.search.geocode.GeoCodeResult;
+import com.baidu.mapapi.search.geocode.GeoCoder;
+import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
+import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
+import com.blin.btrack.GPS.LocationInfo;
 import com.google.gson.Gson;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class MainActivity extends Activity implements SendMsgAsyncTask.OnSendScuessListener, SendTagMsgAsyncTask.OnSendTagScuessListener {
+public class MainActivity extends Activity implements OnGetGeoCoderResultListener,SendMsgAsyncTask.OnSendScuessListener, SendTagMsgAsyncTask.OnSendTagScuessListener {
 
     PushApplication app;
     Gson mGson;
     String curMsg;
 
+    //Baidu Location Service
+    public LocationInfo Curloc1=new LocationInfo();
+    private LatLng CurPOI;
+    private GeoCoder mSearch;
+    public LocationClient mLocationClient;
+    public GeofenceClient mGeofenceClient;
+    public MyLocationListener mMyLocationListener;
+    public String  mLocationResult;
+    public String LocationResult;
+    //Baidu Location Service Finish
     BroadcastReceiver commReceiver = new BroadcastReceiver() {
 
         @Override
@@ -40,10 +62,10 @@ public class MainActivity extends Activity implements SendMsgAsyncTask.OnSendScu
                 int errorCode = bindData.getInt("errorCode");
                 String bindString;
                 if (errorCode == 0) {
-                    bindString = " 用户Id: " + bindData.getString("userId") + "\n 通道Id: " + bindData.getString("channelId");
+                    bindString = " 用?Id: " + bindData.getString("userId") + "\n 通道Id: " + bindData.getString("channelId");
                 } else {
-                    bindString = "推送服务失败：" + errorCode;
-                    Toast.makeText(getApplicationContext(), "推送服务失败：" + errorCode,
+                    bindString = "推送服?失?：" + errorCode;
+                    Toast.makeText(getApplicationContext(), "推送服?失?：" + errorCode,
                             Toast.LENGTH_LONG).show();
                 }
                 ((TextView) findViewById(R.id.textView1)).append(bindString);
@@ -96,17 +118,50 @@ public class MainActivity extends Activity implements SendMsgAsyncTask.OnSendScu
         BackgoundService.luanch(getApplicationContext());
         registerMessageCommReceiver();
         setContentView(R.layout.activity_main);
-        ((TextView) findViewById(R.id.textView1)).setText("推送准备。。。\n");
+        ((TextView) findViewById(R.id.textView1)).setText("推送准?。。。\n");
         app = PushApplication.getInstance();
         mGson = app.getGson();
+        InitLoc();
     }
-
+    public void InitLoc()
+    {
+//        mLocationClient = new LocationClient(this.getApplicationContext());
+        mLocationClient = new LocationClient(getApplicationContext());
+        mMyLocationListener = new MyLocationListener();
+        mGeofenceClient = new GeofenceClient(getApplicationContext());
+        LocationClientOption option = new LocationClientOption();
+        option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy);
+        option.setOpenGps(true);// 打?gps
+        option.setCoorType("bd09ll"); // 置坐??型
+        option.setScanSpan(1000);
+        option.setProdName("BennyLoc");
+        option.setIsNeedAddress(true);
+        mLocationClient.setLocOption(option);
+        mLocationClient.start();
+        mLocationClient.registerLocationListener(mMyLocationListener);
+        mSearch = GeoCoder.newInstance();
+        mSearch.setOnGetGeoCodeResultListener(this);
+    }
     private void registerMessageCommReceiver() {
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(MessageReceiver.ACTION_COMMUNICATION);
         LocalBroadcastManager.getInstance(this).registerReceiver(commReceiver, intentFilter);
     }
+//    Current Location
+    public void CurLocation(View v) {
 
+       /*CurLoc a1=new CurLoc(this);
+        LocationInfo Loc;
+        a1.InitLoc();
+      Loc=a1.Curlocation;*/
+        String S1="Latitude:"+Double.toString(Curloc1.getLatitude())+
+                  "\tLongtitude:"+Double.toString(Curloc1.getLongitude());
+        Toast.makeText(getApplicationContext(), S1,
+                Toast.LENGTH_SHORT).show();
+       /* Toast.makeText(getApplicationContext(), "Click! ",
+                Toast.LENGTH_SHORT).show();*/
+
+    }
     public void send(View v) {
         String userId = app.getUserId();
         String channelId = app.getChannelId();
@@ -137,13 +192,13 @@ public class MainActivity extends Activity implements SendMsgAsyncTask.OnSendScu
 
 
         final EditText textviewGid = new EditText(this);
-        textviewGid.setHint("以英文逗号隔开：");
+        textviewGid.setHint("以英文逗?隔?：");
         layout.addView(textviewGid);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(
                 this);
         builder.setView(layout);
-        builder.setPositiveButton("照TAG发送",
+        builder.setPositiveButton("照TAG?送",
                 new DialogInterface.OnClickListener() {
 
                     public void onClick(DialogInterface dialog, int which) {
@@ -182,13 +237,13 @@ public class MainActivity extends Activity implements SendMsgAsyncTask.OnSendScu
         layout.setOrientation(LinearLayout.VERTICAL);
 
         final EditText textviewGid = new EditText(this);
-        textviewGid.setHint("以英文逗号隔开：");
+        textviewGid.setHint("以英文逗?隔?：");
         layout.addView(textviewGid);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(
                 this);
         builder.setView(layout);
-        builder.setPositiveButton("设置TAG",
+        builder.setPositiveButton("?置TAG",
                 new DialogInterface.OnClickListener() {
 
                     public void onClick(DialogInterface dialog, int which) {
@@ -256,6 +311,71 @@ public class MainActivity extends Activity implements SendMsgAsyncTask.OnSendScu
 
     }
 
+    /**
+     * Location Service
+     */
+    public class MyLocationListener implements BDLocationListener {
 
+        @Override
+        public void onReceiveLocation(BDLocation location) {
+            //Receive Location
+            StringBuffer sb = new StringBuffer(256);
+            Curloc1.setLocationTime(location.getTime());
+            Curloc1.setLatitude(location.getLatitude());
+            Curloc1.setLongitude(location.getLongitude());
+            Curloc1.setLocationType(location.getLocType());
+            Curloc1.setRadius(location.getRadius());
+            Curloc1.setErrorCode(location.getLocType());
+            Toast.makeText(getApplicationContext(),  "Latitude:"+Double.toString(location.getLatitude()),
+                    Toast.LENGTH_SHORT).show();
+
+            mLocationClient.stop();
+//            Log.i("BaiduLocationApiDem", sb.toString());
+        }
+
+
+    }
+
+
+    /**
+     * 珆尨趼睫揹
+     * @param str
+     */
+    public void logMsg(String str) {
+        try {
+            if (mLocationResult != null)
+                mLocationResult=str;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onGetGeoCodeResult(GeoCodeResult result) {
+        if (result == null || result.error != SearchResult.ERRORNO.NO_ERROR) {
+            Toast.makeText(this, "onGetGeoCodeResult抱歉", Toast.LENGTH_LONG)
+                    .show();
+            return;
+        }
+
+        String strInfo = String.format("?度：%f ?度：%f",
+                result.getLocation().latitude, result.getLocation().longitude);
+        Toast.makeText(this, strInfo, Toast.LENGTH_LONG).show();
+    }
+    @Override
+    public void onGetReverseGeoCodeResult(ReverseGeoCodeResult result) {
+        if (result == null || result.error != SearchResult.ERRORNO.NO_ERROR) {
+            Toast.makeText(this, "Sorry! Not found!", Toast.LENGTH_LONG)
+                    .show();
+            return;
+        }
+        Toast.makeText(this, result.getAddress(),
+                Toast.LENGTH_LONG).show();
+
+    }
+    /**
+     * 詢儕僅華燴峓戲隙覃
+     * @author jpren
+     *
+     */
 }
-
