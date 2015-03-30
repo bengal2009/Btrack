@@ -5,10 +5,19 @@ package com.blin.btrack.GPS;
  */
 public class LocationInfo {
     private String LocationTime;
-    private String Latitude;
-    private String Longitude;
-    private String LocationType;
-    private String Radius;
+    private int ErrorCode;
+    private double Latitude;
+    private double Longitude;
+    private int LocationType;
+    private float Radius;
+
+    public int getErrorCode() {
+        return ErrorCode;
+    }
+
+    public void setErrorCode(int errorCode) {
+        ErrorCode = errorCode;
+    }
 
     public String getLocationTime() {
         return LocationTime;
@@ -18,35 +27,35 @@ public class LocationInfo {
         LocationTime = locationTime;
     }
 
-    public String getLatitude() {
+    public double getLatitude() {
         return Latitude;
     }
 
-    public void setLatitude(String latitude) {
+    public void setLatitude(double latitude) {
         Latitude = latitude;
     }
 
-    public String getLongitude() {
+    public double getLongitude() {
         return Longitude;
     }
 
-    public void setLongitude(String longitude) {
+    public void setLongitude(double longitude) {
         Longitude = longitude;
     }
 
-    public String getLocationType() {
+    public int getLocationType() {
         return LocationType;
     }
 
-    public void setLocationType(String locationType) {
+    public void setLocationType(int locationType) {
         LocationType = locationType;
     }
 
-    public String getRadius() {
+    public float getRadius() {
         return Radius;
     }
 
-    public void setRadius(String radius) {
+    public void setRadius(float radius) {
         Radius = radius;
     }
 }

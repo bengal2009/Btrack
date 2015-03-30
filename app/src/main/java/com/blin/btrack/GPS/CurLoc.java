@@ -14,7 +14,6 @@ import com.baidu.mapapi.search.core.SearchResult;
 import com.baidu.mapapi.search.geocode.GeoCodeResult;
 import com.baidu.mapapi.search.geocode.GeoCoder;
 import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
-import com.baidu.mapapi.search.geocode.ReverseGeoCodeOption;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 
 /**
@@ -32,9 +31,11 @@ public class CurLoc extends Activity implements OnGetGeoCoderResultListener {
     public LocationInfo Curloc;
     private Context mcontext;
     private LocationClientOption.LocationMode tempMode = LocationClientOption.LocationMode.Hight_Accuracy;
-
+    public LocationInfo Curlocation;
+    private boolean GetLocaFlag=false;
     public CurLoc(Context mcontext) {
         this.mcontext=mcontext;
+
     }
 
     public void InitLoc()
@@ -56,6 +57,12 @@ public class CurLoc extends Activity implements OnGetGeoCoderResultListener {
         mSearch.setOnGetGeoCodeResultListener(this);
     }
 
+    public LocationInfo ReturnLocInfo()
+    {
+        if(GetLocaFlag==false) return null;
+        return Curloc;
+
+    }
     @Override
     protected void onStop() {
         // TODO Auto-generated method stub
@@ -75,37 +82,20 @@ public class CurLoc extends Activity implements OnGetGeoCoderResultListener {
         public void onReceiveLocation(BDLocation location) {
             //Receive Location
             StringBuffer sb = new StringBuffer(256);
-            sb.append("time : ");
-            sb.append(location.getTime());
+            Curloc.setLocationTime(location.getTime());
             sb.append("\nerror code : ");
             sb.append(location.getLocType());
-            sb.append("\nlatitude : ");
-            sb.append(location.getLatitude());
-            sb.append("\nlontitude : ");
-            sb.append(location.getLongitude());
-            sb.append("\nradius : ");
-            sb.append(location.getRadius());
-            if (location.getLocType() == BDLocation.TypeGpsLocation){
-                sb.append("\nspeed : ");
-                sb.append(location.getSpeed());
-                sb.append("\nsatellite : ");
-                sb.append(location.getSatelliteNumber());
-                sb.append("\ndirection : ");
-                sb.append("\naddr : ");
-                sb.append(location.getAddrStr());
-                sb.append(location.getDirection());
-            } else if (location.getLocType() == BDLocation.TypeNetWorkLocation){
-                sb.append("\naddr : ");
-                sb.append(location.getAddrStr());
-                //堍茠妀陓洘
-                sb.append("\noperationers : ");
-                sb.append(location.getOperators());
-            }
-            CurPOI=new LatLng(location.getLatitude(),location.getLongitude()) ;
+            Curloc.setLatitude(location.getLatitude());
+            Curloc.setLongitude(location.getLongitude());
+            Curloc.setLocationType(location.getLocType());
+            Curloc.setRadius(location.getRadius());
+            Curloc.setErrorCode(location.getLocType());
+           /* CurPOI=new LatLng(location.getLatitude(),location.getLongitude()) ;
             mSearch.reverseGeoCode(new ReverseGeoCodeOption()
                     .location( CurPOI));
-            LocationResult=sb.toString();
+            LocationResult=sb.toString();*/
             mLocationClient.stop();
+            GetLocaFlag=!GetLocaFlag;
 //            Log.i("BaiduLocationApiDem", sb.toString());
         }
 
