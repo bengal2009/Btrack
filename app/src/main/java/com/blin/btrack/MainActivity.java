@@ -19,6 +19,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.baidu.android.pushservice.PushManager;
+import com.blin.btrack.GPS.CurLoc;
+import com.blin.btrack.GPS.LocationInfo;
 import com.google.gson.Gson;
 
 import java.sql.Timestamp;
@@ -30,7 +32,7 @@ public class MainActivity extends Activity implements SendMsgAsyncTask.OnSendScu
     PushApplication app;
     Gson mGson;
     String curMsg;
-
+    LocationInfo LocInfo=new LocationInfo();
     BroadcastReceiver commReceiver = new BroadcastReceiver() {
 
         @Override
@@ -120,7 +122,16 @@ public class MainActivity extends Activity implements SendMsgAsyncTask.OnSendScu
         InputMethodManager inputmanger = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         inputmanger.hideSoftInputFromWindow(etMessage.getWindowToken(), 0);
     }
-
+    //Current Location
+    public void CurLocation(View v){
+        Toast.makeText(getApplicationContext(), "Click! ",
+                Toast.LENGTH_SHORT).show();
+       CurLoc a1=new CurLoc(this);
+        a1.InitLoc();
+       /* LocInfo=a1.ReturnLocInfo();
+        Toast.makeText(getApplicationContext(), Double.toString(LocInfo.getLatitude()),
+                Toast.LENGTH_SHORT).show();*/
+    }
     //SendTag
     public void SendTag(View v) {
         final String userId = app.getUserId();

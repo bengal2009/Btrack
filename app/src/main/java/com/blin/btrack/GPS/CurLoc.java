@@ -2,7 +2,6 @@ package com.blin.btrack.GPS;
 
 import android.app.Activity;
 import android.content.Context;
-import android.os.Bundle;
 import android.widget.Toast;
 
 import com.baidu.location.BDLocation;
@@ -39,7 +38,7 @@ public class CurLoc extends Activity implements OnGetGeoCoderResultListener {
 
     }
 
-    @Override
+   /* @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mLocationClient = new LocationClient(mcontext);
@@ -58,7 +57,7 @@ public class CurLoc extends Activity implements OnGetGeoCoderResultListener {
         mSearch = GeoCoder.newInstance();
         mSearch.setOnGetGeoCodeResultListener(this);
     }
-
+*/
     public void InitLoc()
     {
 //        mLocationClient = new LocationClient(this.getApplicationContext());
