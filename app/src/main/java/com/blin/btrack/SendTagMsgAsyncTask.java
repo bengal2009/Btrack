@@ -5,7 +5,7 @@ import android.os.Handler;
 import android.util.Log;
 
 
-public class SendTagMsgAsyncTask {
+public class  SendTagMsgAsyncTask {
 	private BaiduPush mBaiduPush;
 	private String mMessage;
     private String mTagStr;
