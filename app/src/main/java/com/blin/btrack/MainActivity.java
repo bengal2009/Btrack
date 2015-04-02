@@ -36,6 +36,7 @@ public class MainActivity extends Activity implements SendMsgAsyncTask.OnSendScu
     String curMsg;
     CurLoc CurLocShow=new CurLoc(this);
 
+    LocationInfo LocInfo=new LocationInfo();
     BroadcastReceiver commReceiver = new BroadcastReceiver() {
 
         @Override
@@ -126,7 +127,16 @@ public class MainActivity extends Activity implements SendMsgAsyncTask.OnSendScu
         InputMethodManager inputmanger = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         inputmanger.hideSoftInputFromWindow(etMessage.getWindowToken(), 0);
     }
-
+    //Current Location
+    public void CurLocation(View v){
+        Toast.makeText(getApplicationContext(), "Click! ",
+                Toast.LENGTH_SHORT).show();
+       CurLoc a1=new CurLoc(this);
+        a1.InitLoc();
+       /* LocInfo=a1.ReturnLocInfo();
+        Toast.makeText(getApplicationContext(), Double.toString(LocInfo.getLatitude()),
+                Toast.LENGTH_SHORT).show();*/
+    }
     //SendTag
     public void SendTag(View v) {
         final String userId = app.getUserId();
