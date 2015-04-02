@@ -19,17 +19,22 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.baidu.android.pushservice.PushManager;
+import com.blin.btrack.GPS.CurLoc;
+import com.blin.btrack.GPS.LocationInfo;
 import com.google.gson.Gson;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class MainActivity extends Activity implements SendMsgAsyncTask.OnSendScuessListener, SendTagMsgAsyncTask.OnSendTagScuessListener {
+public class MainActivity extends Activity implements SendMsgAsyncTask.OnSendScuessListener,
+        SendTagMsgAsyncTask.OnSendTagScuessListener,
+        CurLoc.OnCurSendScuessListener {
 
     PushApplication app;
     Gson mGson;
     String curMsg;
+    CurLoc CurLocShow=new CurLoc(this);
 
     BroadcastReceiver commReceiver = new BroadcastReceiver() {
 
@@ -99,6 +104,7 @@ public class MainActivity extends Activity implements SendMsgAsyncTask.OnSendScu
         ((TextView) findViewById(R.id.textView1)).setText("推送准备。。。\n");
         app = PushApplication.getInstance();
         mGson = app.getGson();
+        CurLocShow.setOnCurSendScuessListener(this);
     }
 
     private void registerMessageCommReceiver() {
@@ -213,7 +219,24 @@ public class MainActivity extends Activity implements SendMsgAsyncTask.OnSendScu
         PushManager.listTags(this);
         PushManager.delTags(this, app.getListTags());
     }
+    public void CurLocationClick(View V)
+    {
+       if(CurLocShow.GetLocaFlag==false)
+        {
+        CurLocShow.InitLoc();
+    }
+        else{
+           Log.i("MainActivity","Location Start!");
+        CurLocShow.mLocationClient.start();
+    }
 
+    }
+
+    @Override
+    public void CurLocsendScuess(LocationInfo CurrentLoc)
+    {
+        Log.i("getLatitude", Double.toString(CurrentLoc.getLatitude()));
+    }
     @Override
     public void sendScuess(String msg) {
         Calendar calendar = Calendar.getInstance();
