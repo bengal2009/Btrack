@@ -213,8 +213,16 @@ public class MainActivity extends Activity implements SendMsgAsyncTask.OnSendScu
                                 .getText().toString());
                         PushManager.setTags(getApplicationContext(), tags);*/
                         String userId = app.getUserId();
-                        SetTagTask task = new SetTagTask(textviewGid.getText().toString(), userId);
-                        task.setTags();
+                        try
+                        {
+                            SetTagTask task = new SetTagTask(textviewGid.getText().toString(), userId);
+                            task.setTags();
+                        }
+                        catch(Exception e)
+                        {
+                            Log.i("Main",e.toString());
+                        }
+
                     }
 
                 });
@@ -222,12 +230,24 @@ public class MainActivity extends Activity implements SendMsgAsyncTask.OnSendScu
     }
 
     public void ListTag(View v) {
-        PushManager.listTags(this);
+        try
+        {
+        PushManager.listTags(this);}
+        catch(Exception e)
+        {
+            Log.i("Main",e.toString());
+        }
     }
 
     public void DelTag(View v) {
+        try
+        {
         PushManager.listTags(this);
-        PushManager.delTags(this, app.getListTags());
+        PushManager.delTags(this, app.getListTags());}
+        catch(Exception e)
+        {
+            Log.i("Main",e.toString());
+        }
     }
     public void CurLocationClick(View V)
     {
