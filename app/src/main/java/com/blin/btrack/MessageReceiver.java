@@ -221,7 +221,7 @@ public class MessageReceiver extends FrontiaPushMessageReceiver {
             deliverSimpleMessage(arg0, "onListTags", s1+"\n");
         }*/
         // Demo更新界面展示代?，?用?在?里加入自己的?理??
-        if(tags.size()>0) {
+        if(tags!=null) {
             Intent intent = new Intent(ACTION_COMMUNICATION);
             ArrayList<String> tagarraylist = new ArrayList<String>(tags);
             Bundle bindData = new Bundle();
@@ -229,6 +229,11 @@ public class MessageReceiver extends FrontiaPushMessageReceiver {
             intent.putExtra("onListTags", bindData);
             LocalBroadcastManager.getInstance(arg0).sendBroadcast(intent);
 
+        }
+        else
+        {
+            Toast.makeText(arg0, "no tags ",
+                    Toast.LENGTH_SHORT).show();
         }
         /*ArrayList<String> s1=tags.toArray()
 
